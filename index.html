@@ -133,6 +133,231 @@
         }
       }
 
+      /* ==================== 🚨 WRONG PASSWORD EFFECTS ==================== */
+      #wrongFlash {
+        position: fixed;
+        inset: 0;
+        z-index: 99;
+        pointer-events: none;
+        opacity: 0;
+        background: radial-gradient(
+          ellipse at 50% 50%,
+          rgba(255, 0, 40, 0.45) 0%,
+          rgba(180, 0, 30, 0.75) 60%,
+          rgba(80, 0, 15, 0.95) 100%
+        );
+        transition: opacity 0.35s ease;
+      }
+      #wrongFlash.show {
+        animation: wrongFlashAnim 0.85s ease-out forwards;
+      }
+      @keyframes wrongFlashAnim {
+        0% {
+          opacity: 0;
+        }
+        12% {
+          opacity: 1;
+        }
+        30% {
+          opacity: 0.35;
+        }
+        50% {
+          opacity: 0.8;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      .lock-card.wrong-shake {
+        animation: lockShakeHard 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+        border-color: rgba(255, 40, 80, 0.9) !important;
+        box-shadow:
+          0 0 0 2px rgba(255, 40, 80, 0.55),
+          0 0 50px rgba(255, 40, 80, 0.75),
+          0 0 100px rgba(180, 0, 30, 0.5),
+          0 20px 50px rgba(0, 0, 0, 0.8),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+      }
+      @keyframes lockShakeHard {
+        0%,
+        100% {
+          transform: translateX(0) rotate(0deg);
+        }
+        10% {
+          transform: translateX(-14px) rotate(-3deg);
+        }
+        20% {
+          transform: translateX(12px) rotate(3deg);
+        }
+        30% {
+          transform: translateX(-12px) rotate(-2.5deg);
+        }
+        40% {
+          transform: translateX(10px) rotate(2deg);
+        }
+        50% {
+          transform: translateX(-8px) rotate(-1.5deg);
+        }
+        60% {
+          transform: translateX(6px) rotate(1.5deg);
+        }
+        70% {
+          transform: translateX(-4px) rotate(-1deg);
+        }
+        80% {
+          transform: translateX(3px) rotate(0.5deg);
+        }
+        90% {
+          transform: translateX(-2px) rotate(0deg);
+        }
+      }
+
+      #passwordInput.wrong-field {
+        animation: fieldShakeHard 0.55s ease;
+        border-color: #ff2a4a !important;
+        background: rgba(255, 42, 74, 0.18) !important;
+        box-shadow:
+          0 0 0 3px rgba(255, 42, 74, 0.35),
+          0 0 30px rgba(255, 42, 74, 0.65) !important;
+        color: #fff !important;
+      }
+      #passwordInput.wrong-field::placeholder {
+        color: rgba(255, 150, 170, 0.9);
+      }
+      @keyframes fieldShakeHard {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        15% {
+          transform: translateX(-10px);
+        }
+        30% {
+          transform: translateX(9px);
+        }
+        45% {
+          transform: translateX(-7px);
+        }
+        60% {
+          transform: translateX(5px);
+        }
+        75% {
+          transform: translateX(-3px);
+        }
+        90% {
+          transform: translateX(2px);
+        }
+      }
+
+      .big-error-x {
+        position: fixed;
+        transform: translate(-50%, -20px) scale(0.3);
+        font-size: 80px;
+        color: #ff2a4a;
+        font-weight: 900;
+        font-family: var(--font-display);
+        line-height: 1;
+        pointer-events: none;
+        opacity: 0;
+        text-shadow:
+          0 0 20px rgba(255, 42, 74, 1),
+          0 0 40px rgba(255, 42, 74, 0.8),
+          0 0 80px rgba(255, 0, 40, 0.6);
+        z-index: 105;
+        animation: bigXAnim 1s ease-out forwards;
+      }
+      @keyframes bigXAnim {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, 0) scale(0.3) rotate(-30deg);
+        }
+        20% {
+          opacity: 1;
+          transform: translate(-50%, -30px) scale(1.4) rotate(8deg);
+        }
+        45% {
+          opacity: 1;
+          transform: translate(-50%, -50px) scale(1.1) rotate(-4deg);
+        }
+        75% {
+          opacity: 0.85;
+          transform: translate(-50%, -70px) scale(1) rotate(0deg);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -110px) scale(0.6) rotate(10deg);
+        }
+      }
+
+      .err-particle {
+        position: fixed;
+        pointer-events: none;
+        z-index: 106;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          #ff5e7a 0%,
+          #c9184a 70%,
+          transparent 100%
+        );
+        box-shadow:
+          0 0 10px rgba(255, 42, 74, 0.9),
+          0 0 20px rgba(255, 42, 74, 0.5);
+        animation: errParticleFly 0.9s ease-out forwards;
+      }
+      @keyframes errParticleFly {
+        0% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(
+              calc(-50% + var(--ex, 60px)),
+              calc(-50% + var(--ey, -80px))
+            )
+            scale(0.3);
+        }
+      }
+
+      .crack-line {
+        position: fixed;
+        pointer-events: none;
+        z-index: 104;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 42, 74, 0.9),
+          transparent
+        );
+        height: 2px;
+        border-radius: 2px;
+        filter: drop-shadow(0 0 8px rgba(255, 42, 74, 1));
+        animation: crackAnim 0.7s ease-out forwards;
+        transform-origin: center;
+      }
+      @keyframes crackAnim {
+        0% {
+          opacity: 0;
+          transform: scaleX(0);
+        }
+        20% {
+          opacity: 1;
+          transform: scaleX(1);
+        }
+        70% {
+          opacity: 1;
+          transform: scaleX(1);
+        }
+        100% {
+          opacity: 0;
+          transform: scaleX(1.1);
+        }
+      }
+
       /* ==================== LOCK ==================== */
       #lockScreen {
         position: fixed;
@@ -1536,8 +1761,7 @@
         }
         15% {
           opacity: 1;
-          transform: translate3d(calc(var(--bx, 0px) * 0.2), -20px, 0)
-            scale(1);
+          transform: translate3d(calc(var(--bx, 0px) * 0.2), -20px, 0) scale(1);
         }
         70% {
           opacity: 0.9;
@@ -1772,7 +1996,9 @@
         -webkit-backdrop-filter: blur(10px);
         box-shadow: 0 8px 22px rgba(0, 0, 0, 0.55);
         opacity: 0;
-        transition: opacity 0.5s ease, transform 0.3s ease;
+        transition:
+          opacity 0.5s ease,
+          transform 0.3s ease;
         pointer-events: none;
         transform: translateY(-6px);
       }
@@ -1832,7 +2058,9 @@
         align-items: center;
         justify-content: center;
         gap: 18px;
-        transition: box-shadow 0.6s, border-color 0.6s;
+        transition:
+          box-shadow 0.6s,
+          border-color 0.6s;
         overflow: hidden;
       }
       .sentence-card.complete {
@@ -2098,7 +2326,9 @@
         font-size: 92px;
         color: var(--rose);
         filter: drop-shadow(0 0 22px rgba(255, 77, 122, 0.9));
-        transition: color 0.4s, filter 0.4s;
+        transition:
+          color 0.4s,
+          filter 0.4s;
       }
       .meter-heart.pulse > i {
         animation: heartBeat 0.85s infinite;
@@ -2238,7 +2468,9 @@
         gap: 8px;
         background: linear-gradient(135deg, var(--rose-deep), var(--rose));
         box-shadow: 0 8px 22px rgba(201, 24, 74, 0.45);
-        transition: transform 0.2s, opacity 0.3s;
+        transition:
+          transform 0.2s,
+          opacity 0.3s;
       }
       .meter-btn:active:not(:disabled) {
         transform: scale(0.95);
@@ -2432,7 +2664,9 @@
         transform: translateY(20px) scale(0.95);
         animation: cardIn 0.6s ease forwards;
         cursor: pointer;
-        transition: transform 0.3s, border-color 0.3s;
+        transition:
+          transform 0.3s,
+          border-color 0.3s;
       }
       .photo-card:nth-child(1) {
         animation-delay: 0.1s;
@@ -2624,7 +2858,11 @@
         -webkit-backdrop-filter: blur(10px);
         opacity: 0;
         pointer-events: none;
-        transition: opacity 0.5s, color 0.3s, box-shadow 0.3s, transform 0.2s;
+        transition:
+          opacity 0.5s,
+          color 0.3s,
+          box-shadow 0.3s,
+          transform 0.2s;
       }
       #musicBtn.show {
         opacity: 1;
@@ -2677,6 +2915,9 @@
     <div class="bg-glow"></div>
     <div id="stars"></div>
 
+    <!-- 🚨 وميض الخطأ -->
+    <div id="wrongFlash"></div>
+
     <audio id="loveSong" loop preload="auto">
       <source src="love-song.mp3" type="audio/mpeg" />
     </audio>
@@ -2695,7 +2936,7 @@
 
     <!-- LOCK SCREEN -->
     <section id="lockScreen">
-      <div class="lock-card">
+      <div class="lock-card" id="lockCard">
         <div class="lock-icon-box">
           <i class="fa-solid fa-lock"></i>
         </div>
@@ -3357,8 +3598,8 @@
           </div>
           <p class="blow-hint" id="blowHint">
             <i class="fa-solid fa-lightbulb"></i>
-            نصيحة: اضغطي على الزر وقرّبي الموبايل من بوقك وانفخي..
-            وكل الشمع هينطفي مرة واحدة
+            نصيحة: اضغطي على الزر وقرّبي الموبايل من بوقك وانفخي.. وكل الشمع
+            هينطفي مرة واحدة
           </p>
         </div>
 
@@ -3370,7 +3611,7 @@
         </div>
       </div>
 
-      <!-- SENTENCE CARD — مكان البالونات الأصلي -->
+      <!-- SENTENCE CARD -->
       <div class="section reveal">
         <h2 class="section-title">
           <i class="fa-solid fa-star"></i>
@@ -3576,6 +3817,9 @@
       const progressText = document.getElementById("progressText");
       const sentenceCard = document.getElementById("sentenceCard");
       const sentenceSlots = document.getElementById("sentenceSlots");
+
+      const lockCard = document.getElementById("lockCard");
+      const wrongFlash = document.getElementById("wrongFlash");
 
       let unlocked = false;
       let cakeBlown = 0;
@@ -3809,6 +4053,26 @@
           src.stop(t + dur);
         } catch (e) {}
       }
+      function playErrorBuzz() {
+        try {
+          const ctx = ensureSfx();
+          const t = ctx.currentTime;
+          [0, 0.18].forEach((offset) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "square";
+            osc.frequency.setValueAtTime(160, t + offset);
+            osc.frequency.exponentialRampToValueAtTime(90, t + offset + 0.15);
+            gain.gain.setValueAtTime(0.0001, t + offset);
+            gain.gain.linearRampToValueAtTime(0.14, t + offset + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, t + offset + 0.17);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(t + offset);
+            osc.stop(t + offset + 0.2);
+          });
+        } catch (e) {}
+      }
       function vibrate(pattern) {
         if (navigator.vibrate) {
           try {
@@ -3883,18 +4147,107 @@
         }
       });
 
+      /* ==================== 🚨 WRONG PASSWORD EFFECTS ==================== */
+      function spawnErrorParticles(cx, cy) {
+        for (let i = 0; i < 18; i++) {
+          const p = document.createElement("div");
+          p.className = "err-particle";
+          p.style.left = cx + "px";
+          p.style.top = cy + "px";
+          const angle = Math.random() * Math.PI * 2;
+          const dist = 50 + Math.random() * 90;
+          p.style.setProperty("--ex", Math.cos(angle) * dist + "px");
+          p.style.setProperty("--ey", Math.sin(angle) * dist + "px");
+          const size = 5 + Math.random() * 8;
+          p.style.width = size + "px";
+          p.style.height = size + "px";
+          document.body.appendChild(p);
+          setTimeout(() => p.remove(), 950);
+        }
+      }
+      function spawnCrackLines(cx, cy) {
+        for (let i = 0; i < 5; i++) {
+          const line = document.createElement("div");
+          line.className = "crack-line";
+          const angle = (i / 5) * 180 - 90 + (Math.random() - 0.5) * 20;
+          const length = 80 + Math.random() * 120;
+          line.style.width = length + "px";
+          line.style.left = cx - length / 2 + "px";
+          line.style.top = cy + "px";
+          line.style.transform = `rotate(${angle}deg)`;
+          line.style.transformOrigin = "center";
+          document.body.appendChild(line);
+          setTimeout(() => line.remove(), 800);
+        }
+      }
+
+      function triggerWrongPasswordEffect() {
+        // 1. وميض أحمر في الخلفية
+        wrongFlash.classList.remove("show");
+        void wrongFlash.offsetWidth;
+        wrongFlash.classList.add("show");
+        setTimeout(() => wrongFlash.classList.remove("show"), 900);
+
+        // 2. اهتزاز الصندوق
+        lockCard.classList.remove("wrong-shake");
+        void lockCard.offsetWidth;
+        lockCard.classList.add("wrong-shake");
+        setTimeout(() => lockCard.classList.remove("wrong-shake"), 700);
+
+        // 3. اهتزاز الحقل
+        passwordInput.classList.remove("wrong-field");
+        void passwordInput.offsetWidth;
+        passwordInput.classList.add("wrong-field");
+
+        // 4. اهتزاز الموبايل
+        vibrate([80, 40, 80, 40, 120, 40, 80]);
+
+        // 5. صوت Buzz
+        playErrorBuzz();
+
+        // 6. X كبيرة
+        const rect = lockCard.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+
+        const bigX = document.createElement("div");
+        bigX.className = "big-error-x";
+        bigX.textContent = "✕";
+        bigX.style.left = cx + "px";
+        bigX.style.top = rect.top - 10 + "px";
+        document.body.appendChild(bigX);
+        setTimeout(() => bigX.remove(), 1100);
+
+        // 7. جزيئات حمراء
+        spawnErrorParticles(cx, cy);
+
+        // 8. شقوق حمراء
+        spawnCrackLines(cx, cy);
+      }
+
       /* ==================== PASSWORD ==================== */
       function checkPassword() {
         const value = passwordInput.value.trim();
         if (value === PASSWORD) {
-          unlock();
+          // نجاح
+          lockCard.style.transition = "box-shadow 0.4s ease";
+          lockCard.style.boxShadow =
+            "0 0 0 3px rgba(243, 205, 145, 0.55), 0 0 60px rgba(243, 205, 145, 0.8), 0 20px 50px rgba(0, 0, 0, 0.8)";
+          setTimeout(() => unlock(), 250);
         } else {
+          triggerWrongPasswordEffect();
+
           errorMsg.innerHTML =
             'مش دي كلمة السر يا يقلبي، جربي تاني <i class="fa-solid fa-heart-crack"></i>';
           errorMsg.classList.add("show");
+
           passwordInput.value = "";
           passwordInput.focus();
-          setTimeout(() => errorMsg.classList.remove("show"), 2500);
+
+          setTimeout(() => {
+            passwordInput.classList.remove("wrong-field");
+            errorMsg.classList.remove("show");
+          }, 2500);
         }
       }
       unlockBtn.addEventListener("click", checkPassword);
@@ -4465,7 +4818,6 @@
       let collectedCount = 0;
       const foundWords = new Set();
 
-      // بناء الحقول
       function buildSentenceSlots() {
         sentenceSlots.innerHTML = "";
         BALLOON_WORDS.forEach((word, i) => {
@@ -4478,25 +4830,22 @@
       }
       buildSentenceSlots();
 
-      // توليد البالونات في الأقسام
       function spawnSectionBalloons() {
         const hosts = document.querySelectorAll("[data-balloon-host]");
 
-        // توزيع المواضع بشكل مختلف لكل بالونة
         const positions = [
           "pos-tr",
           "pos-tl",
           "pos-tr",
-          "pos-bl",
           "pos-tl",
-          "pos-br",
+          "pos-tr",
+          "pos-tl",
           "pos-tr",
         ];
 
         hosts.forEach((host, i) => {
           if (i >= BALLOON_WORDS.length) return;
 
-          // تأكد إن الـ host عنده position relative
           const computedPos = getComputedStyle(host).position;
           if (computedPos === "static") {
             host.style.position = "relative";
@@ -4509,7 +4858,6 @@
           balloon.style.background = BALLOON_COLORS[i];
           balloon.innerHTML = '<span class="s-string"></span>';
 
-          // تمايل مختلف
           const dur = 3.5 + Math.random() * 1.8;
           const delay = Math.random() * 2;
           balloon.style.animation = `sectionBalloonSway ${dur}s ease-in-out ${delay}s infinite`;
@@ -4532,7 +4880,6 @@
         });
       }
 
-      // فرقعة البالونة
       function popSectionBalloon(balloon, index, word) {
         if (balloon.classList.contains("pop")) return;
         balloon.classList.add("pop");
@@ -4544,7 +4891,6 @@
         popSound();
         vibrate([30, 20, 50]);
 
-        // حلقة الفرقعة
         const ring = document.createElement("div");
         ring.className = "pop-ring";
         ring.style.left = cx + "px";
@@ -4552,7 +4898,6 @@
         document.body.appendChild(ring);
         setTimeout(() => ring.remove(), 600);
 
-        // شظايا
         const shardColors = [
           "#ff4d7a",
           "#ffd3e0",
@@ -4573,15 +4918,11 @@
           const d = 50 + Math.random() * 60;
           shard.style.setProperty("--px", Math.cos(a) * d + "px");
           shard.style.setProperty("--py", Math.sin(a) * d + "px");
-          shard.style.setProperty(
-            "--pr",
-            (Math.random() * 720 - 360) + "deg",
-          );
+          shard.style.setProperty("--pr", Math.random() * 720 - 360 + "deg");
           document.body.appendChild(shard);
           setTimeout(() => shard.remove(), 1000);
         }
 
-        // شرارات
         for (let i = 0; i < 8; i++) {
           const spark = document.createElement("div");
           spark.className = "pop-spark";
@@ -4647,10 +4988,7 @@
             osc.frequency.value = f;
             g.gain.setValueAtTime(0.0001, t0 + i * 0.13);
             g.gain.linearRampToValueAtTime(0.1, t0 + i * 0.13 + 0.05);
-            g.gain.exponentialRampToValueAtTime(
-              0.0001,
-              t0 + i * 0.13 + 0.75,
-            );
+            g.gain.exponentialRampToValueAtTime(0.0001, t0 + i * 0.13 + 0.75);
             osc.connect(g);
             g.connect(ctx.destination);
             osc.start(t0 + i * 0.13);
@@ -4855,4 +5193,4 @@
       });
     </script>
   </body>
-</html> 
+</html>
