@@ -4189,10 +4189,18 @@
       let micAnimId = null;
       let micListening = false;
       let blowDetectedRecently = false;
+      let musicSuspendedForMic = false; // ⚡ جديد: بنعرف إذا كنا وقفنا الأغنية عشان المايك
       const BLOW_THRESHOLD = 45;
 
       async function startListening() {
         if (micListening) return;
+
+        // ⚡ اقفل الأغنية الأول عشان المايك ميسجلهاش ويعتبرها نفخ
+        if (musicOn) {
+          musicSuspendedForMic = true;
+          await muteAllMusic(350);
+        }
+
         try {
           micStream = await navigator.mediaDevices.getUserMedia({
             audio: {
@@ -4215,39 +4223,81 @@
           blowMeter.classList.add("active");
           blowHint.innerHTML =
             '<i class="fa-solid fa-wind"></i> قرّبي الموبايل من بوقك وانفخي بقوة عشان كل الشمع ينطفي';
-          const dataArray = new Uint8Array(micAnalyser.frequencyBinCount);
+
+          const n = micAnalyser.frequencyBinCount;
+          const byteData = new Uint8Array(n);
+          const floatData = new Float32Array(n);
+
           let holdCounter = 0;
+          const BLOW_HOLD_FRAMES = 8;
+
           const tick = () => {
             if (!micListening) return;
-            micAnalyser.getByteFrequencyData(dataArray);
-            let lowSum = 0;
-            const lowCount = 40;
-            for (let i = 0; i < lowCount; i++) lowSum += dataArray[i];
-            const lowAvg = lowSum / lowCount;
-            let totalSum = 0;
-            for (let i = 0; i < dataArray.length; i++) totalSum += dataArray[i];
-            const totalAvg = totalSum / dataArray.length;
-            const displayLevel = Math.min(100, (lowAvg / 120) * 100);
+            micAnalyser.getByteFrequencyData(byteData);
+            micAnalyser.getFloatFrequencyData(floatData);
+
+            // ===== حساب طاقة الترددات الواطية (0 - 500Hz تقريبًا) =====
+            let lowSumByte = 0;
+            let lowCount = 0;
+            for (let i = 0; i < n; i++) {
+              if (i < 12) {
+                lowSumByte += byteData[i];
+                lowCount++;
+              }
+            }
+            const lowAvg = lowSumByte / Math.max(1, lowCount);
+
+            // ===== حساب Spectral Flatness =====
+            // (الضجيج = قريب من 1 | النغمات الموسيقية = قريبة من 0)
+            let sumLog = 0;
+            let sumLin = 0;
+            for (let i = 0; i < n; i++) {
+              const power = Math.pow(10, floatData[i] / 10);
+              sumLog += Math.log(power + 1e-12);
+              sumLin += power;
+            }
+            const geoMean = Math.exp(sumLog / n);
+            const ariMean = sumLin / n + 1e-12;
+            const flatness = geoMean / ariMean;
+
+            // ===== تحديث شريط القياس =====
+            const displayLevel = Math.min(100, (lowAvg / 110) * 100);
             blowMeterFill.style.width = displayLevel + "%";
-            if (lowAvg > BLOW_THRESHOLD && totalAvg > 20) {
+
+            // ===== كشف النفخ =====
+            const isLoud = lowAvg > BLOW_THRESHOLD;
+            const isNoiseLike = flatness > 0.28; // ضجيج أبيض مش نغمة
+
+            if (isLoud && isNoiseLike) {
               holdCounter++;
-              if (holdCounter > 6 && !blowDetectedRecently && !cakeAllOut) {
+              if (
+                holdCounter > BLOW_HOLD_FRAMES &&
+                !blowDetectedRecently &&
+                !cakeAllOut
+              ) {
                 blowDetectedRecently = true;
                 triggerBlowSuccess();
               }
             } else {
               holdCounter = Math.max(0, holdCounter - 1);
             }
+
             micAnimId = requestAnimationFrame(tick);
           };
           tick();
         } catch (err) {
+          // ⚡ رجّع الأغنية لو حصل خطأ
+          if (musicSuspendedForMic) {
+            musicSuspendedForMic = false;
+            if (musicOn) restoreAllMusic(700);
+          }
           showToast(
             'مش قادر أوصل للمايك <i class="fa-solid fa-microphone-slash"></i> دوسي على الشمع بإيدك',
           );
           stopListening();
         }
       }
+
       function stopListening() {
         micListening = false;
         blowBtn.classList.remove("listening");
@@ -4256,6 +4306,7 @@
         blowMeterFill.style.width = "0%";
         blowHint.innerHTML =
           '<i class="fa-solid fa-lightbulb"></i> نصيحة: اضغطي على الزر وقرّبي الموبايل من بوقك وانفخي.. وكل الشمع هينطفي مرة واحدة';
+
         if (micAnimId) {
           cancelAnimationFrame(micAnimId);
           micAnimId = null;
@@ -4271,6 +4322,12 @@
           micStream = null;
         }
         micAnalyser = null;
+
+        // ⚡ رجّع الأغنية لو المستخدم وقف الاستماع من غير ما ينفخ
+        if (musicSuspendedForMic && !blowDetectedRecently) {
+          if (musicOn) restoreAllMusic(800);
+        }
+        musicSuspendedForMic = false;
       }
 
       function triggerBlowSuccess() {
@@ -4341,74 +4398,69 @@
       buildSentenceSlots();
 
       function spawnSectionBalloons() {
-  const hosts = document.querySelectorAll("[data-balloon-host]");
+        const hosts = document.querySelectorAll("[data-balloon-host]");
 
-  const positions = [
-    "pos-tr",
-    "pos-tl",
-    "pos-tr",
-    "pos-tl",
-    "pos-tr",
-    "pos-tl",
-    "pos-tr",
-  ];
+        const positions = [
+          "pos-tr",
+          "pos-tl",
+          "pos-tr",
+          "pos-tl",
+          "pos-tr",
+          "pos-tl",
+          "pos-tr",
+        ];
 
-  hosts.forEach((host, i) => {
-    if (i >= BALLOON_WORDS.length) return;
+        hosts.forEach((host, i) => {
+          if (i >= BALLOON_WORDS.length) return;
 
-    const computedPos = getComputedStyle(host).position;
-    if (computedPos === "static") {
-      host.style.position = "relative";
-    }
+          const computedPos = getComputedStyle(host).position;
+          if (computedPos === "static") {
+            host.style.position = "relative";
+          }
 
-    const balloon = document.createElement("div");
-    balloon.className = `section-balloon ${positions[i]}`;
-    balloon.dataset.index = i;
-    balloon.dataset.word = BALLOON_WORDS[i];
-    balloon.style.background = BALLOON_COLORS[i];
-    balloon.innerHTML = '<span class="s-string"></span>';
+          const balloon = document.createElement("div");
+          balloon.className = `section-balloon ${positions[i]}`;
+          balloon.dataset.index = i;
+          balloon.dataset.word = BALLOON_WORDS[i];
+          balloon.style.background = BALLOON_COLORS[i];
+          balloon.innerHTML = '<span class="s-string"></span>';
 
-    const dur = 3.5 + Math.random() * 1.8;
+          const dur = 3.5 + Math.random() * 1.8;
+          const negDelay = -(Math.random() * dur);
 
-    // ⚡ المفتاح: negative delay — الأنيميشن يبدأ من نقطة عشوائية جوّاه
-    // كده مفيش قفزة في البداية أبدًا
-    const negDelay = -(Math.random() * dur);
+          balloon.style.opacity = "0";
+          balloon.style.animation = `sectionBalloonSway ${dur}s ease-in-out ${negDelay}s infinite`;
 
-    // ⚡ ندخّلها بحالة ابتدائية (شفافة + مصغّرة)
-    balloon.style.opacity = "0";
-    balloon.style.animation = `sectionBalloonSway ${dur}s ease-in-out ${negDelay}s infinite`;
+          balloon.animate(
+            [
+              { opacity: 0, offset: 0 },
+              { opacity: 1, offset: 1 },
+            ],
+            {
+              duration: 500,
+              delay: i * 100,
+              easing: "ease-out",
+              fill: "forwards",
+            },
+          );
 
-    // ⚡ دخول ناعم للبالونة (يشتغل على opacity بس عشان ميتعارضش مع الـ animation)
-    balloon.animate(
-      [
-        { opacity: 0, offset: 0 },
-        { opacity: 1, offset: 1 },
-      ],
-      {
-        duration: 500,
-        delay: i * 100, // stagger — كل بالونة تظهر بعد التانية بـ 100ms
-        easing: "ease-out",
-        fill: "forwards",
-      },
-    );
+          balloon.addEventListener("click", (e) => {
+            e.stopPropagation();
+            popSectionBalloon(balloon, i, BALLOON_WORDS[i]);
+          });
+          balloon.addEventListener(
+            "touchend",
+            (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              popSectionBalloon(balloon, i, BALLOON_WORDS[i]);
+            },
+            { passive: false },
+          );
 
-    balloon.addEventListener("click", (e) => {
-      e.stopPropagation();
-      popSectionBalloon(balloon, i, BALLOON_WORDS[i]);
-    });
-    balloon.addEventListener(
-      "touchend",
-      (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        popSectionBalloon(balloon, i, BALLOON_WORDS[i]);
-      },
-      { passive: false },
-    );
-
-    host.appendChild(balloon);
-  });
-} 
+          host.appendChild(balloon);
+        });
+      }
 
       function popSectionBalloon(balloon, index, word) {
         if (balloon.classList.contains("pop")) return;
