@@ -96,7 +96,6 @@
           );
       }
 
-      /* ⚡ النجوم بقت Canvas — أخف بمراحل */
       #stars {
         position: fixed;
         inset: 0;
@@ -107,15 +106,13 @@
         display: block;
       }
 
-      /* ==================== ⚡ PERFORMANCE HELPERS ==================== */
-      /* وقف كل الأنيميشن لما التاب يخفى */
+      /* ==================== PERFORMANCE HELPERS ==================== */
       body.tab-hidden *,
       body.tab-hidden *::before,
       body.tab-hidden *::after {
         animation-play-state: paused !important;
       }
 
-      /* وقف الأنيميشن في الأقسام اللي خارج الشاشة */
       .perf-pause,
       .perf-pause *,
       .perf-pause *::before,
@@ -123,7 +120,6 @@
         animation-play-state: paused !important;
       }
 
-      /* عزل كروت عشان الـ repaint ميخرجش برّاها */
       .counter-box,
       .pull-card,
       .letter,
@@ -133,7 +129,7 @@
         contain: layout style;
       }
 
-      /* ==================== 🚨 WRONG PASSWORD EFFECTS ==================== */
+      /* ==================== WRONG PASSWORD EFFECTS ==================== */
       #wrongFlash {
         position: fixed;
         inset: 0;
@@ -470,7 +466,6 @@
         animation: heartBeat 1.8s infinite;
       }
 
-      /* ⚡ glowPulse بقى على pseudo-element بدون text-shadow animation */
       .name-title {
         position: relative;
         isolation: isolate;
@@ -1049,7 +1044,6 @@
         transform-style: preserve-3d;
         transition: transform 0.5s ease;
       }
-      /* ⚡ فلتر واحد على الـ SVG بدل 3 feGaussianBlur */
       .cake-pro-svg {
         width: 100%;
         height: auto;
@@ -1237,7 +1231,7 @@
         100% { opacity: 0; transform: scale(2.4); }
       }
 
-      /* ============ BLOW ============ */
+      /* ============ BLOW (FIXED) ============ */
       .blow-wrap {
         display: flex;
         flex-direction: column;
@@ -1295,7 +1289,15 @@
       }
       .blow-btn i {
         font-size: 16px;
+        position: relative;
+        z-index: 2;
       }
+      .blow-btn span {
+        position: relative;
+        z-index: 2;
+      }
+
+      /* ⚡ زر النفخ في حالة الاستماع — بدون رعشة */
       .blow-btn.listening {
         background: linear-gradient(135deg, rgba(255, 240, 200, 0.98), rgba(255, 180, 120, 0.98));
         color: #4a0018;
@@ -1304,7 +1306,7 @@
           0 0 26px rgba(255, 220, 150, 0.85),
           0 0 60px rgba(255, 150, 90, 0.5),
           inset 0 1px 0 rgba(255, 255, 255, 0.6);
-        animation: listenPulseSoft 1.4s ease-in-out infinite;
+        /* ❌ شيلنا animation عشان الرعشة */
       }
       .blow-btn.listening::before {
         opacity: 0.4;
@@ -1312,14 +1314,24 @@
       .blow-btn.listening i {
         animation: micPulse 0.9s ease-in-out infinite;
       }
-      @keyframes listenPulseSoft {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.04); }
-      }
       @keyframes micPulse {
         0%, 100% { transform: scale(1); }
         50% { transform: scale(1.25); }
       }
+
+      /* ⚡ Fill indicator — بيتحرك مع قوة الصوت بدل الرعشة */
+      .blow-btn-fill {
+        position: absolute;
+        inset: 0;
+        border-radius: 50px;
+        background: linear-gradient(90deg, rgba(255, 200, 100, 0.5), rgba(255, 130, 50, 0.85));
+        transform-origin: right center;
+        transform: scaleX(0);
+        transition: transform 0.08s linear;
+        pointer-events: none;
+        z-index: 1;
+      }
+
       .blow-meter {
         width: 200px;
         height: 6px;
@@ -2380,7 +2392,6 @@
     <div class="bg-glow"></div>
     <canvas id="stars"></canvas>
 
-    <!-- 🚨 وميض الخطأ -->
     <div id="wrongFlash"></div>
 
     <audio id="loveSong" loop preload="auto">
@@ -2439,7 +2450,7 @@
         </p>
       </div>
 
-      <!-- COUNTER — بالونة #1 -->
+      <!-- COUNTER -->
       <div class="counter-box reveal" data-balloon-host>
         <div class="counter-label">
           <i class="fa-solid fa-infinity"></i>
@@ -2470,7 +2481,7 @@
         </div>
       </div>
 
-      <!-- PULL STRING — بالونة #2 -->
+      <!-- PULL STRING -->
       <div class="pull-box reveal" id="pullBox" data-balloon-host>
         <div class="pull-card">
           <p class="pull-hint">
@@ -2490,7 +2501,7 @@
         </div>
       </div>
 
-      <!-- LETTER — بالونة #3 -->
+      <!-- LETTER -->
       <div class="section reveal" data-balloon-host>
         <h2 class="section-title">
           <i class="fa-solid fa-envelope-open-text"></i>
@@ -2512,7 +2523,7 @@
         </div>
       </div>
 
-      <!-- REASONS — بالونة #4 -->
+      <!-- REASONS -->
       <div class="section reveal" data-balloon-host>
         <h2 class="section-title">
           <i class="fa-solid fa-heart"></i>
@@ -2601,7 +2612,7 @@
         </div>
       </div>
 
-      <!-- TIMELINE — بالونة #5 -->
+      <!-- TIMELINE -->
       <div class="section reveal" data-balloon-host>
         <h2 class="section-title">
           حكايتنا
@@ -2650,7 +2661,7 @@
         </div>
       </div>
 
-      <!-- CAKE — بالونة #6 -->
+      <!-- CAKE -->
       <div class="section reveal" data-balloon-host>
         <h2 class="section-title">
           <i class="fa-solid fa-cake-candles"></i>
@@ -2719,29 +2730,9 @@
                 </filter>
               </defs>
 
-              <ellipse
-                cx="160"
-                cy="316"
-                rx="130"
-                ry="14"
-                fill="#000"
-                opacity="0.55"
-              />
-              <ellipse
-                cx="160"
-                cy="306"
-                rx="140"
-                ry="16"
-                fill="url(#gradPlate)"
-              />
-              <ellipse
-                cx="160"
-                cy="304"
-                rx="135"
-                ry="12"
-                fill="#f3cd91"
-                opacity="0.35"
-              />
+              <ellipse cx="160" cy="316" rx="130" ry="14" fill="#000" opacity="0.55" />
+              <ellipse cx="160" cy="306" rx="140" ry="16" fill="url(#gradPlate)" />
+              <ellipse cx="160" cy="304" rx="135" ry="12" fill="#f3cd91" opacity="0.35" />
 
               <g id="layerBot">
                 <path
@@ -2843,14 +2834,7 @@
 
               <g id="candlesGroup">
                 <g class="candle-svg" data-candle="1">
-                  <rect
-                    x="116"
-                    y="46"
-                    width="9"
-                    height="46"
-                    rx="3"
-                    fill="url(#gradCandle)"
-                  />
+                  <rect x="116" y="46" width="9" height="46" rx="3" fill="url(#gradCandle)" />
                   <line x1="120.5" y1="46" x2="120.5" y2="40" stroke="#3a1018" stroke-width="1.4" />
                   <g class="flame-svg">
                     <ellipse cx="120.5" cy="30" rx="7" ry="12" fill="url(#gradFlameOuter)" />
@@ -2858,14 +2842,7 @@
                   </g>
                 </g>
                 <g class="candle-svg" data-candle="2">
-                  <rect
-                    x="137"
-                    y="46"
-                    width="9"
-                    height="46"
-                    rx="3"
-                    fill="url(#gradCandle)"
-                  />
+                  <rect x="137" y="46" width="9" height="46" rx="3" fill="url(#gradCandle)" />
                   <line x1="141.5" y1="46" x2="141.5" y2="40" stroke="#3a1018" stroke-width="1.4" />
                   <g class="flame-svg">
                     <ellipse cx="141.5" cy="30" rx="7" ry="12" fill="url(#gradFlameOuter)" />
@@ -2873,14 +2850,7 @@
                   </g>
                 </g>
                 <g class="candle-svg" data-candle="3">
-                  <rect
-                    x="158"
-                    y="46"
-                    width="9"
-                    height="46"
-                    rx="3"
-                    fill="url(#gradCandle)"
-                  />
+                  <rect x="158" y="46" width="9" height="46" rx="3" fill="url(#gradCandle)" />
                   <line x1="162.5" y1="46" x2="162.5" y2="40" stroke="#3a1018" stroke-width="1.4" />
                   <g class="flame-svg">
                     <ellipse cx="162.5" cy="30" rx="7" ry="12" fill="url(#gradFlameOuter)" />
@@ -2888,14 +2858,7 @@
                   </g>
                 </g>
                 <g class="candle-svg" data-candle="4">
-                  <rect
-                    x="179"
-                    y="46"
-                    width="9"
-                    height="46"
-                    rx="3"
-                    fill="url(#gradCandle)"
-                  />
+                  <rect x="179" y="46" width="9" height="46" rx="3" fill="url(#gradCandle)" />
                   <line x1="183.5" y1="46" x2="183.5" y2="40" stroke="#3a1018" stroke-width="1.4" />
                   <g class="flame-svg">
                     <ellipse cx="183.5" cy="30" rx="7" ry="12" fill="url(#gradFlameOuter)" />
@@ -2903,14 +2866,7 @@
                   </g>
                 </g>
                 <g class="candle-svg" data-candle="5">
-                  <rect
-                    x="200"
-                    y="46"
-                    width="9"
-                    height="46"
-                    rx="3"
-                    fill="url(#gradCandle)"
-                  />
+                  <rect x="200" y="46" width="9" height="46" rx="3" fill="url(#gradCandle)" />
                   <line x1="204.5" y1="46" x2="204.5" y2="40" stroke="#3a1018" stroke-width="1.4" />
                   <g class="flame-svg">
                     <ellipse cx="204.5" cy="30" rx="7" ry="12" fill="url(#gradFlameOuter)" />
@@ -2932,6 +2888,7 @@
 
         <div class="blow-wrap">
           <button class="blow-btn" id="blowBtn" type="button">
+            <span class="blow-btn-fill" id="blowBtnFill"></span>
             <i class="fa-solid fa-microphone"></i>
             <span id="blowBtnText">انفخي مرة واحدة</span>
           </button>
@@ -3025,7 +2982,7 @@
         </div>
       </div>
 
-      <!-- SIGNATURE — بالونة #7 -->
+      <!-- SIGNATURE -->
       <div class="signature reveal" data-balloon-host>
         <span class="lead">بحبك للأبد</span>
         <div class="heart-div">
@@ -3148,6 +3105,7 @@
 
       const blowBtn = document.getElementById("blowBtn");
       const blowBtnText = document.getElementById("blowBtnText");
+      const blowBtnFill = document.getElementById("blowBtnFill");
       const blowMeter = document.getElementById("blowMeter");
       const blowMeterFill = document.getElementById("blowMeterFill");
       const blowHint = document.getElementById("blowHint");
@@ -3171,7 +3129,7 @@
         "أمنية ٥: يا رب تكوني أسعد إنسانة في الدنيا",
       ];
 
-      /* ==================== ⚡ STARS (Canvas) ==================== */
+      /* ==================== STARS ==================== */
       (function makeStars() {
         const canvas = document.getElementById("stars");
         const ctx = canvas.getContext("2d", { alpha: true });
@@ -3235,7 +3193,6 @@
         window.__stars = { start, stop };
         window.addEventListener("resize", resize, { passive: true });
         resize();
-        // ⚡ مش بنبدأ الستارت غير بعد فتح القفل
       })();
 
       /* ==================== CAKE SPARKLES ==================== */
@@ -3286,19 +3243,13 @@
 
       /* ==================== CONFETTI ==================== */
       const CONFETTI_COLORS = [
-        "#ff4d7a",
-        "#ffd166",
-        "#06d6a0",
-        "#118ab2",
-        "#f3cd91",
-        "#ff8fab",
+        "#ff4d7a", "#ffd166", "#06d6a0", "#118ab2", "#f3cd91", "#ff8fab",
       ];
       function burstConfetti(n = 80) {
         for (let i = 0; i < n; i++) {
           const el = document.createElement("div");
           el.className = "confetti";
-          const color =
-            CONFETTI_COLORS[(Math.random() * CONFETTI_COLORS.length) | 0];
+          const color = CONFETTI_COLORS[(Math.random() * CONFETTI_COLORS.length) | 0];
           el.style.background = color;
           el.style.left = Math.random() * 100 + "vw";
           const w = 6 + Math.random() * 8;
@@ -3317,11 +3268,7 @@
                 opacity: 0,
               },
             ],
-            {
-              duration: dur,
-              easing: "cubic-bezier(0.3, 0.1, 0.6, 1)",
-              fill: "forwards",
-            },
+            { duration: dur, easing: "cubic-bezier(0.3, 0.1, 0.6, 1)", fill: "forwards" },
           ).onfinish = () => el.remove();
         }
       }
@@ -3333,9 +3280,7 @@
         if (heartTimer) clearInterval(heartTimer);
         heartTimer = setInterval(() => {
           if (document.hidden) return;
-          // ⚡ مش بنرمي قلوب لو الشاشة الرئيسية مش ظاهرة
           if (!messageScreen.classList.contains("show")) return;
-          // ⚡ حد أقصى للقلوب في الشاشة في نفس الوقت
           if (document.querySelectorAll(".falling-heart").length > 12) return;
 
           const el = document.createElement("div");
@@ -3343,8 +3288,7 @@
           el.innerHTML = '<i class="fa-solid fa-heart"></i>';
           el.style.left = Math.random() * 100 + "%";
           el.style.fontSize = 12 + Math.random() * 18 + "px";
-          el.style.color =
-            HEART_COLORS[(Math.random() * HEART_COLORS.length) | 0];
+          el.style.color = HEART_COLORS[(Math.random() * HEART_COLORS.length) | 0];
           document.body.appendChild(el);
 
           const dur = 6000 + Math.random() * 4000;
@@ -3359,11 +3303,7 @@
                 opacity: 0,
               },
             ],
-            {
-              duration: dur,
-              easing: "cubic-bezier(0.35, 0.1, 0.6, 1)",
-              fill: "forwards",
-            },
+            { duration: dur, easing: "cubic-bezier(0.35, 0.1, 0.6, 1)", fill: "forwards" },
           ).onfinish = () => el.remove();
         }, interval);
       }
@@ -3461,7 +3401,7 @@
         }
       }
 
-      /* ==================== MUSIC (مع Fade احترافي) ==================== */
+      /* ==================== MUSIC ==================== */
       let musicOn = false;
       let fallbackCtx = null;
       let fallbackTimer = null;
@@ -3495,10 +3435,7 @@
           const tick = (now) => {
             const t = Math.min((now - startTime) / duration, 1);
             const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-            loveSong.volume = Math.max(
-              0,
-              Math.min(1, startVol + (targetVol - startVol) * eased),
-            );
+            loveSong.volume = Math.max(0, Math.min(1, startVol + (targetVol - startVol) * eased));
             if (t < 1) {
               loveSongFadeRAF = requestAnimationFrame(tick);
             } else {
@@ -3644,7 +3581,7 @@
         }
       });
 
-      /* ==================== 🚨 WRONG PASSWORD EFFECTS ==================== */
+      /* ==================== WRONG PASSWORD ==================== */
       function spawnErrorParticles(cx, cy) {
         for (let i = 0; i < 18; i++) {
           const p = document.createElement("div");
@@ -3721,14 +3658,11 @@
           setTimeout(() => unlock(), 250);
         } else {
           triggerWrongPasswordEffect();
-
           errorMsg.innerHTML =
             'مش دي كلمة السر يا يقلبي، جربي تاني <i class="fa-solid fa-heart-crack"></i>';
           errorMsg.classList.add("show");
-
           passwordInput.value = "";
           passwordInput.focus();
-
           setTimeout(() => {
             passwordInput.classList.remove("wrong-field");
             errorMsg.classList.remove("show");
@@ -3748,7 +3682,6 @@
         setTimeout(() => {
           messageScreen.classList.add("show");
           musicBtn.classList.add("show");
-          // ⚡ شغّل النجوم دلوقتي (بعد ما القفل اختفى = الـ backdrop-filter راح)
           if (window.__stars) window.__stars.start();
           spawnSectionBalloons();
           startFallingHearts(800);
@@ -3790,7 +3723,6 @@
         revealObserver.observe(el);
       });
 
-      /* ==================== ⚡ PERF: إيقاف الأنيميشن للأقسام بعيدة عن الشاشة ==================== */
       const perfPauseObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((e) => {
@@ -3886,9 +3818,7 @@
         });
       });
 
-      /* ============================================================
-         🎂 CAKE PRO LOGIC
-         ============================================================ */
+      /* ==================== CAKE PRO ==================== */
       function svgPointToStage(svg, x, y) {
         const pt = svg.createSVGPoint();
         pt.x = x;
@@ -3958,8 +3888,7 @@
         cakeBlown++;
         if (!silent && cakeWishIdx < CAKE_WISHES.length) {
           showToast(
-            '<i class="fa-solid fa-wand-magic-sparkles"></i> ' +
-              CAKE_WISHES[cakeWishIdx],
+            '<i class="fa-solid fa-wand-magic-sparkles"></i> ' + CAKE_WISHES[cakeWishIdx],
           );
           cakeWishIdx++;
         }
@@ -4069,30 +3998,14 @@
           const ctx = ensureSfx();
           const t0 = ctx.currentTime + 0.05;
           const melody = [
-            { f: 392.0, d: 0.28 },
-            { f: 392.0, d: 0.18 },
-            { f: 440.0, d: 0.42 },
-            { f: 392.0, d: 0.42 },
-            { f: 523.25, d: 0.42 },
-            { f: 493.88, d: 0.78 },
-            { f: 392.0, d: 0.28 },
-            { f: 392.0, d: 0.18 },
-            { f: 440.0, d: 0.42 },
-            { f: 392.0, d: 0.42 },
-            { f: 587.33, d: 0.42 },
-            { f: 523.25, d: 0.78 },
-            { f: 392.0, d: 0.28 },
-            { f: 392.0, d: 0.18 },
-            { f: 783.99, d: 0.42 },
-            { f: 659.25, d: 0.42 },
-            { f: 523.25, d: 0.42 },
-            { f: 493.88, d: 0.42 },
-            { f: 440.0, d: 0.78 },
-            { f: 698.46, d: 0.28 },
-            { f: 698.46, d: 0.18 },
-            { f: 659.25, d: 0.42 },
-            { f: 523.25, d: 0.42 },
-            { f: 587.33, d: 0.42 },
+            { f: 392.0, d: 0.28 }, { f: 392.0, d: 0.18 }, { f: 440.0, d: 0.42 },
+            { f: 392.0, d: 0.42 }, { f: 523.25, d: 0.42 }, { f: 493.88, d: 0.78 },
+            { f: 392.0, d: 0.28 }, { f: 392.0, d: 0.18 }, { f: 440.0, d: 0.42 },
+            { f: 392.0, d: 0.42 }, { f: 587.33, d: 0.42 }, { f: 523.25, d: 0.78 },
+            { f: 392.0, d: 0.28 }, { f: 392.0, d: 0.18 }, { f: 783.99, d: 0.42 },
+            { f: 659.25, d: 0.42 }, { f: 523.25, d: 0.42 }, { f: 493.88, d: 0.42 },
+            { f: 440.0, d: 0.78 }, { f: 698.46, d: 0.28 }, { f: 698.46, d: 0.18 },
+            { f: 659.25, d: 0.42 }, { f: 523.25, d: 0.42 }, { f: 587.33, d: 0.42 },
             { f: 523.25, d: 0.95 },
           ];
           let t = t0;
@@ -4138,8 +4051,7 @@
           el.className = "confetti confetti-number";
           el.textContent = "18";
           el.style.left = Math.random() * 100 + "vw";
-          el.style.color =
-            CONFETTI_COLORS[(Math.random() * CONFETTI_COLORS.length) | 0];
+          el.style.color = CONFETTI_COLORS[(Math.random() * CONFETTI_COLORS.length) | 0];
           el.style.fontSize = 14 + Math.random() * 16 + "px";
           el.style.fontWeight = "900";
           el.style.fontFamily = "Marhey, sans-serif";
@@ -4155,11 +4067,7 @@
                 opacity: 0,
               },
             ],
-            {
-              duration: dur,
-              easing: "cubic-bezier(0.3, 0.1, 0.6, 1)",
-              fill: "forwards",
-            },
+            { duration: dur, easing: "cubic-bezier(0.3, 0.1, 0.6, 1)", fill: "forwards" },
           ).onfinish = () => el.remove();
         }
       }
@@ -4181,7 +4089,7 @@
       });
 
       /* ============================================================
-         🌬️ MIC / BLOW LOGIC
+         🌬️ MIC / BLOW LOGIC — النسخة الاحترافية النهائية
          ============================================================ */
       let micStream = null;
       let micAnalyser = null;
@@ -4189,13 +4097,12 @@
       let micAnimId = null;
       let micListening = false;
       let blowDetectedRecently = false;
-      let musicSuspendedForMic = false; // ⚡ جديد: بنعرف إذا كنا وقفنا الأغنية عشان المايك
-      const BLOW_THRESHOLD = 45;
+      let musicSuspendedForMic = false;
 
       async function startListening() {
         if (micListening) return;
 
-        // ⚡ اقفل الأغنية الأول عشان المايك ميسجلهاش ويعتبرها نفخ
+        // ⚡ اقفل الأغنية الأول عشان المايك ميسجلهاش
         if (musicOn) {
           musicSuspendedForMic = true;
           await muteAllMusic(350);
@@ -4212,70 +4119,92 @@
           const AC = window.AudioContext || window.webkitAudioContext;
           if (!sfxCtx) sfxCtx = new AC();
           if (sfxCtx.state === "suspended") sfxCtx.resume();
+
           micSource = sfxCtx.createMediaStreamSource(micStream);
+
+          // ⚡ مضخّم الإشارة
+          const micGain = sfxCtx.createGain();
+          micGain.gain.value = 2.5;
+
           micAnalyser = sfxCtx.createAnalyser();
-          micAnalyser.fftSize = 1024;
-          micAnalyser.smoothingTimeConstant = 0.7;
-          micSource.connect(micAnalyser);
+          micAnalyser.fftSize = 512;
+          micAnalyser.smoothingTimeConstant = 0.35;
+
+          micSource.connect(micGain);
+          micGain.connect(micAnalyser);
+
           micListening = true;
           blowBtn.classList.add("listening");
           blowBtnText.textContent = "انفخي دلوقتي! 💨";
           blowMeter.classList.add("active");
           blowHint.innerHTML =
-            '<i class="fa-solid fa-wind"></i> قرّبي الموبايل من بوقك وانفخي بقوة عشان كل الشمع ينطفي';
+            '<i class="fa-solid fa-wind"></i> قرّبي الموبايل 5-10 سم من بوقك وانفخي بقوة';
 
           const n = micAnalyser.frequencyBinCount;
-          const byteData = new Uint8Array(n);
-          const floatData = new Float32Array(n);
+          const data = new Uint8Array(n);
 
           let holdCounter = 0;
-          const BLOW_HOLD_FRAMES = 8;
+          const HOLD_FRAMES = 4;
+
+          // ⚡ كاليبريشن: بنقيس ضوضاء المكان أول 500ms
+          let calibrating = true;
+          let noiseSum = 0;
+          let noiseSamples = 0;
+          const calibStartTime = performance.now();
+          let noiseFloor = 15;
 
           const tick = () => {
             if (!micListening) return;
-            micAnalyser.getByteFrequencyData(byteData);
-            micAnalyser.getFloatFrequencyData(floatData);
+            micAnalyser.getByteFrequencyData(data);
 
-            // ===== حساب طاقة الترددات الواطية (0 - 500Hz تقريبًا) =====
-            let lowSumByte = 0;
-            let lowCount = 0;
-            for (let i = 0; i < n; i++) {
-              if (i < 12) {
-                lowSumByte += byteData[i];
-                lowCount++;
+            // ⚡ النطاق: 90Hz - 3.7kHz (من bin 1 لـ 40)
+            let sum = 0;
+            let maxVal = 0;
+            const startBin = 1;
+            const endBin = Math.min(n, 40);
+            for (let i = startBin; i < endBin; i++) {
+              const v = data[i];
+              sum += v;
+              if (v > maxVal) maxVal = v;
+            }
+            const avg = sum / (endBin - startBin);
+
+            // كاليبريشن أول 500ms
+            if (calibrating) {
+              noiseSum += avg;
+              noiseSamples++;
+              if (performance.now() - calibStartTime > 500) {
+                noiseFloor = Math.max(5, noiseSum / noiseSamples);
+                calibrating = false;
               }
+              micAnimId = requestAnimationFrame(tick);
+              return;
             }
-            const lowAvg = lowSumByte / Math.max(1, lowCount);
 
-            // ===== حساب Spectral Flatness =====
-            // (الضجيج = قريب من 1 | النغمات الموسيقية = قريبة من 0)
-            let sumLog = 0;
-            let sumLin = 0;
-            for (let i = 0; i < n; i++) {
-              const power = Math.pow(10, floatData[i] / 10);
-              sumLog += Math.log(power + 1e-12);
-              sumLin += power;
+            // ⚡ العتبة الديناميكية
+            const THRESHOLD = Math.max(75, noiseFloor * 2.2);
+
+            // ⚡ شريط القياس
+            const span = Math.max(1, THRESHOLD - noiseFloor);
+            const level = Math.max(0, Math.min(100, ((avg - noiseFloor) / span) * 100));
+            blowMeterFill.style.width = level + "%";
+
+            // ⚡ ملء زر النفخ (فيدباك بصري)
+            if (blowBtnFill) {
+              const fillAmt = Math.min(1, level / 100);
+              blowBtnFill.style.transform = `scaleX(${fillAmt})`;
             }
-            const geoMean = Math.exp(sumLog / n);
-            const ariMean = sumLin / n + 1e-12;
-            const flatness = geoMean / ariMean;
 
-            // ===== تحديث شريط القياس =====
-            const displayLevel = Math.min(100, (lowAvg / 110) * 100);
-            blowMeterFill.style.width = displayLevel + "%";
+            // ⚡ كشف النفخ: صوت عالي + peak حاد
+            const isLoud = avg > THRESHOLD;
+            const hasPeak = maxVal > THRESHOLD * 1.4;
 
-            // ===== كشف النفخ =====
-            const isLoud = lowAvg > BLOW_THRESHOLD;
-            const isNoiseLike = flatness > 0.28; // ضجيج أبيض مش نغمة
-
-            if (isLoud && isNoiseLike) {
+            if (isLoud && hasPeak) {
               holdCounter++;
-              if (
-                holdCounter > BLOW_HOLD_FRAMES &&
-                !blowDetectedRecently &&
-                !cakeAllOut
-              ) {
+              if (holdCounter >= HOLD_FRAMES && !blowDetectedRecently && !cakeAllOut) {
                 blowDetectedRecently = true;
+                blowMeterFill.style.width = "100%";
+                if (blowBtnFill) blowBtnFill.style.transform = "scaleX(1)";
                 triggerBlowSuccess();
               }
             } else {
@@ -4286,7 +4215,6 @@
           };
           tick();
         } catch (err) {
-          // ⚡ رجّع الأغنية لو حصل خطأ
           if (musicSuspendedForMic) {
             musicSuspendedForMic = false;
             if (musicOn) restoreAllMusic(700);
@@ -4304,6 +4232,7 @@
         blowBtnText.textContent = "انفخي مرة واحدة";
         blowMeter.classList.remove("active");
         blowMeterFill.style.width = "0%";
+        if (blowBtnFill) blowBtnFill.style.transform = "scaleX(0)";
         blowHint.innerHTML =
           '<i class="fa-solid fa-lightbulb"></i> نصيحة: اضغطي على الزر وقرّبي الموبايل من بوقك وانفخي.. وكل الشمع هينطفي مرة واحدة';
 
@@ -4323,7 +4252,6 @@
         }
         micAnalyser = null;
 
-        // ⚡ رجّع الأغنية لو المستخدم وقف الاستماع من غير ما ينفخ
         if (musicSuspendedForMic && !blowDetectedRecently) {
           if (musicOn) restoreAllMusic(800);
         }
@@ -4399,16 +4327,7 @@
 
       function spawnSectionBalloons() {
         const hosts = document.querySelectorAll("[data-balloon-host]");
-
-        const positions = [
-          "pos-tr",
-          "pos-tl",
-          "pos-tr",
-          "pos-tl",
-          "pos-tr",
-          "pos-tl",
-          "pos-tr",
-        ];
+        const positions = ["pos-tr", "pos-tl", "pos-tr", "pos-tl", "pos-tr", "pos-tl", "pos-tr"];
 
         hosts.forEach((host, i) => {
           if (i >= BALLOON_WORDS.length) return;
@@ -4436,12 +4355,7 @@
               { opacity: 0, offset: 0 },
               { opacity: 1, offset: 1 },
             ],
-            {
-              duration: 500,
-              delay: i * 100,
-              easing: "ease-out",
-              fill: "forwards",
-            },
+            { duration: 500, delay: i * 100, easing: "ease-out", fill: "forwards" },
           );
 
           balloon.addEventListener("click", (e) => {
@@ -4488,8 +4402,7 @@
           shard.style.top = cy + "px";
           shard.style.width = "8px";
           shard.style.height = "6px";
-          shard.style.background =
-            shardColors[(Math.random() * shardColors.length) | 0];
+          shard.style.background = shardColors[(Math.random() * shardColors.length) | 0];
           const a = (i / 10) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
           const d = 50 + Math.random() * 60;
           shard.style.setProperty("--px", Math.cos(a) * d + "px");
@@ -4518,9 +4431,7 @@
           foundWords.add(index);
           collectedCount++;
 
-          const slot = sentenceSlots.querySelector(
-            `.word-slot[data-index="${index}"]`,
-          );
+          const slot = sentenceSlots.querySelector(`.word-slot[data-index="${index}"]`);
           if (slot) {
             slot.textContent = word;
             slot.classList.add("filled");
@@ -4621,37 +4532,12 @@
         meterBtn.disabled = true;
         meterBtnText.textContent = "بيتحسب...";
         const stages = [
-          {
-            to: 12,
-            msg: '١٢٪.. لسه بدري، لسه بدري <i class="fa-solid fa-face-smile-wink"></i>',
-            delay: 900,
-          },
-          {
-            to: 33,
-            msg: '٣٣٪.. الدنيا بدأت تلون <i class="fa-solid fa-heart"></i>',
-            delay: 750,
-          },
-          {
-            to: 58,
-            msg: '٥٨٪.. قلبي بيدق بسرعة <i class="fa-solid fa-heart-pulse"></i>',
-            delay: 750,
-          },
-          {
-            to: 76,
-            msg: '٧٦٪.. مش قادر أتنفس <i class="fa-solid fa-face-smile-beam"></i>',
-            delay: 750,
-          },
-          {
-            to: 92,
-            msg: '٩٢٪.. الأجهزة بتبدأ تسخن <i class="fa-solid fa-fire"></i>',
-            delay: 750,
-          },
-          {
-            to: 100,
-            msg: '١٠٠٪..!! لحظة لحظة <i class="fa-solid fa-eye"></i>',
-            delay: 800,
-            glitch: true,
-          },
+          { to: 12, msg: '١٢٪.. لسه بدري، لسه بدري <i class="fa-solid fa-face-smile-wink"></i>', delay: 900 },
+          { to: 33, msg: '٣٣٪.. الدنيا بدأت تلون <i class="fa-solid fa-heart"></i>', delay: 750 },
+          { to: 58, msg: '٥٨٪.. قلبي بيدق بسرعة <i class="fa-solid fa-heart-pulse"></i>', delay: 750 },
+          { to: 76, msg: '٧٦٪.. مش قادر أتنفس <i class="fa-solid fa-face-smile-beam"></i>', delay: 750 },
+          { to: 92, msg: '٩٢٪.. الأجهزة بتبدأ تسخن <i class="fa-solid fa-fire"></i>', delay: 750 },
+          { to: 100, msg: '١٠٠٪..!! لحظة لحظة <i class="fa-solid fa-eye"></i>', delay: 800, glitch: true },
         ];
         let prev = 0;
         for (const stage of stages) {
@@ -4687,7 +4573,7 @@
         meterHeart.style.transform = "scale(1.15)";
         meterFill.style.width = "100%";
         meterPercent.classList.add("infinity");
-        meterPercent.textContent = "∞";
+        meterPercent.textContent = "";
         meterStatus.classList.remove("warn");
         meterStatus.classList.add("gold");
         meterStatus.innerHTML =
@@ -4759,7 +4645,7 @@
         setTimeout(() => passwordInput.focus(), 500);
       });
 
-      /* ==================== ⚡ VISIBILITY: وقف كل حاجة لما التاب يخفى ==================== */
+      /* ==================== VISIBILITY ==================== */
       document.addEventListener("visibilitychange", () => {
         const hidden = document.hidden;
         document.body.classList.toggle("tab-hidden", hidden);
